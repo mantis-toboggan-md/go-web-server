@@ -9,6 +9,7 @@ import (
 func GorillaRouter() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", handlers.PublicServe)
+	r.HandleFunc("/login", handlers.LogIn).Methods("POST")
 	r.HandleFunc("/other", handlers.OtherServe)
 	return r
 }
