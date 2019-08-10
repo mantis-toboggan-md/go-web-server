@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/mantis_toboggan_md/go_test/mydb"
 )
 
 /* Set up a global string for secret */
@@ -60,14 +61,18 @@ func NeedsToken(next http.Handler) http.Handler {
 }
 
 // LogIn gets name and admin status from headers, create JWT, return JWT as JSON
-func LogIn(w http.ResponseWriter, r *http.Request) {
-	// TODO: add some kind of authentication here
-	name := r.Header.Get("name")
+func LogIn(w http.ResponseWriter, r *http.Request) error {
+	var user mydb.User
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&user); err != nil {
+		return err
+	}
+
 	isAdmin := r.Header.Get("isAdmin") == "true"
 	tokenString, err := GetToken(isAdmin, name)
 	if err != nil {
 		w.WriteHeader(500)
-		return
+		return err
 	}
 	data := map[string]string{"token": tokenString}
 	w.Header().Set("Content-Type", "application/json")

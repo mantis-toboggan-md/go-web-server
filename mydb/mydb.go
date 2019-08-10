@@ -11,6 +11,7 @@ type User struct {
 	Name     string
 	Id       int64
 	Password string
+	IsAdmin  bool
 }
 
 /******************
