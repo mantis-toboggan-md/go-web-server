@@ -9,7 +9,7 @@ import { privateRoute } from './Components/PrivateRoute'
 function App() {
   return (
     <Router basename="/">
-        <Route exact path="/home" component={privateRoute(Home)} />
+        <Route exact path="/" component={privateRoute(Home)} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
       </Router>
