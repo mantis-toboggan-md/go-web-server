@@ -3,6 +3,8 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/mantis_toboggan_md/go_test/database"
 )
 
 // PublicServe returns handler to serve files from "./public"
@@ -14,5 +16,7 @@ func PublicServe(w http.ResponseWriter, r *http.Request) {
 
 // OtherServe returns something obviously different to ensure router working correctly
 func OtherServe(w http.ResponseWriter, r *http.Request) {
+	database.PingDb()
+	database.SelectOne()
 	fmt.Fprintf(w, "Other page")
 }
