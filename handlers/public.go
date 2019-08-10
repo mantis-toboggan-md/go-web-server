@@ -11,7 +11,7 @@ import (
 // default serve index.html from "/"
 func PublicServe(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	http.ServeFile(w, r, "ui/build/index.html")
+	http.ServeFile(w, r, "ui-desk/build/index.html")
 }
 
 // OtherServe returns something obviously different to ensure router working correctly

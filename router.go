@@ -12,20 +12,25 @@ public routes:
 	GET "/" - index
 	POST "/login" - login, get JWT
 	POST "/register" - make acct
+	GET "/auth" - check token validity
 private routes:
 	GET "/other" - placeholder page
 */
 func GorillaRouter() *mux.Router {
 	r := mux.NewRouter()
 	// serve create-react-app static file dir
-	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("ui/build/static"))))
+	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("ui-desk/build/static"))))
 	// serve index.html
 	r.HandleFunc("/", handlers.PublicServe)
 	r.HandleFunc("/login", handlers.LogIn).Methods("POST")
 	r.HandleFunc("/register", handlers.CreateAccount).Methods("POST")
-	// middleware is ugly but if more is needed, alic package may be used
-	r.Handle("/other", handlers.NeedsToken(http.HandlerFunc(handlers.OtherServe)))
+
 	// check authorization header for token and return ok if valid token
 	r.Handle("/auth", handlers.NeedsToken(http.HandlerFunc(handlers.Validated)))
+
+	//example of route protecting middleware
+	// middleware is ugly but if more is needed, alic package may be used
+	r.Handle("/other", handlers.NeedsToken(http.HandlerFunc(handlers.OtherServe)))
+
 	return r
 }
