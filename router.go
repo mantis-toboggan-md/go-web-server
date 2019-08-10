@@ -7,7 +7,7 @@ import (
 	"github.com/mantis_toboggan_md/go_test/handlers"
 )
 
-/* GorrilaRouter creates mux router to manage "handlers"
+/*GorrilaRouter creates mux router to manage "handlers"
 public routes:
 	GET "/" - index
 	POST "/login" - login, get JWT
@@ -17,8 +17,9 @@ private routes:
 */
 func GorillaRouter() *mux.Router {
 	r := mux.NewRouter()
-	//serve create-react-app static file dir
+	// serve create-react-app static file dir
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("ui/build/static"))))
+	// serve index.html
 	r.HandleFunc("/", handlers.PublicServe)
 	r.HandleFunc("/login", handlers.LogIn).Methods("POST")
 	r.HandleFunc("/register", handlers.CreateAccount).Methods("POST")
