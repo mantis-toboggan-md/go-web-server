@@ -4,15 +4,17 @@ import (
 	"database/sql"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 type User struct {
-	Name     string
-	Id       int64
-	Password string
-	IsAdmin  bool
+	Name     string `json:"name, omitempty"`
+	Id       int64  `json:"id,string,omitempty"`
+	Password string `json:"password, omitempty"`
+	IsAdmin  bool   `json:"idAdmin,string,omitempty"`
 }
+
+var PgConnection = "user=postgres password=ginger dbname=go_test"
 
 /******************
 NO DATA MODIFICATION (read)
@@ -64,13 +66,13 @@ func GetManyUsers(db *sql.DB, username string) (interface{}, error) {
 	return users, nil
 }
 
-// query db by id string and return single user struct
-func GetOneUser(db *sql.DB, id int64) (interface{}, error) {
+// query db by name string and return single user struct
+func GetOneUser(db *sql.DB, name string) (User, error) {
 	var thisUser User
 	// shortcut if only one row is expected back
-	err := db.QueryRow("select id, name, password from users where id = ?", id).Scan(&thisUser.Id, &thisUser.Name, &thisUser.Password)
+	err := db.QueryRow("select id, name, password from users where name = $1;", name).Scan(&thisUser.Id, &thisUser.Name, &thisUser.Password)
 	if err != nil {
-		return nil, err
+		return User{}, err
 	}
 	return thisUser, nil
 }
@@ -87,7 +89,7 @@ DATA MODIFICATION (write, uodate, delete)
 
 // add one user to db
 func InsertOneUser(db *sql.DB, user User) (int64, error) {
-	smt, err := db.Prepare("INSERT INTO users(name, password) VALUES(?, ?)")
+	smt, err := db.Prepare("INSERT INTO users(name, password) VALUES($1, $2)")
 	if err != nil {
 		return 0, err
 	}
@@ -95,7 +97,7 @@ func InsertOneUser(db *sql.DB, user User) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return res.LastInsertId()
+	return res.RowsAffected()
 }
 
 // update name of user by id

@@ -7,11 +7,11 @@ import (
 
 // MakeTable creates the users table in the provided db instance
 func MakeTable(db *sql.DB) error {
-	smt, err := db.Prepare("CREATE TABLE users (id int NOT NULL AUTO_INCREMENT, name varchar(50), password varchar(50), isAdmin bool, PRIMARY KEY(id));")
+	_, err := db.Exec("CREATE TABLE users (id serial PRIMARY KEY, name varchar(255), password varchar(255), isAdmin bool);")
 	if err != nil {
 		return err
 	}
-	_, err = smt.Exec()
+	defer db.Close()
 	log.Print("users table created")
 	return err
 }
