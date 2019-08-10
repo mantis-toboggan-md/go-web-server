@@ -14,7 +14,7 @@ import (
 /* Set up a global string for secret */
 var signingKey = []byte("supersecret")
 
-// GetToken creates a 24-hour JWT with the given name and admin status as claims
+// GetToken creates a 24-hour JWT with the given name admin status and id as claims
 func GetToken(isAdmin bool, name string, id int64) (tokenString string, err error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"admin": isAdmin,
@@ -47,6 +47,11 @@ func ValidateToken(tokenString string) (isValid bool, err error) {
 		return false, nil
 	}
 
+}
+
+// return generic ok message for token route
+func Validated(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "token validated")
 }
 
 // NeedsToken middleware checks validity of tokenString in req header then continues or sends 403 forbidden
