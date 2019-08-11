@@ -3,8 +3,11 @@ package mydb
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
+	// auto load .env file from root
+	_ "github.com/joho/godotenv/autoload"
 )
 
 type User struct {
@@ -14,7 +17,7 @@ type User struct {
 	IsAdmin  bool   `json:"idAdmin,string,omitempty"`
 }
 
-var PgConnection = "user=postgres password=ginger dbname=go_test"
+var PgConnection = os.Getenv("DB_STRING")
 
 /******************
 NO DATA MODIFICATION (read)

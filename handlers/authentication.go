@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -12,7 +13,7 @@ import (
 )
 
 /* Set up a global string for secret */
-var signingKey = []byte("supersecret")
+var signingKey = os.Getenv("TOKEN_SECRET")
 
 // GetToken creates a 24-hour JWT with the given name admin status and id as claims
 func GetToken(isAdmin bool, name string, id int64) (tokenString string, err error) {
@@ -94,7 +95,7 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 		Password: string(hash),
 	}
 	//open db connection, insert user, defer close
-	db, err := mydb.PingDB("postgres", mydb.PgConnection)
+	db, err := mydb.PingDB(os.Getenv("DB_NAME"), os.Getenv("DB_STRING"))
 	_, err = mydb.InsertOneUser(db, userDb)
 	defer db.Close()
 	if err != nil {
@@ -119,7 +120,7 @@ func LogIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get user from db
-	db, err := mydb.PingDB("postgres", mydb.PgConnection)
+	db, err := mydb.PingDB(os.Getenv("DB_NAME"), os.Getenv("DB_STRING"))
 	if err != nil {
 		w.WriteHeader(500)
 		fmt.Fprintf(w, "Internal server error")
