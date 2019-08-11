@@ -11,7 +11,7 @@ go run ../go_web_server
 cd ui-desk
 npm build
 ```
-navigate to localhost:5000/
+navigate to http://localhost:5000/
 
 #### React Native app
 ```
