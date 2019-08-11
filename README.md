@@ -1,4 +1,25 @@
 # go-web-server
+## Getting Started
+clone repo into appropriate go src directory (https://golang.org/doc/code.html)
+start web server from root directory:
+```
+go build
+go run ../go_web_server
+```
+#### React web app
+```
+cd ui-desk
+npm build
+```
+navigate to localhost:5000/
+
+#### React Native app
+```
+cd ui-mobile
+npm start
+```
+
+
 ## RESTful go server
   * go net/http package
   * examples of static file serving and JSON serving
